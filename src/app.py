@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 
 # Importa o blueprint de rotas
-from src.controller.user.user_register import bp_user
+from src.controller.user.user_routes import bp_user
 from src.rota_teste import bp_teste #apenas para desenvolvimento
 
 # Importa a configuração da aplicação
