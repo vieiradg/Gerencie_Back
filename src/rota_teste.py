@@ -19,6 +19,6 @@ def teste():
         db_status = f"Erro ao conectar no banco: {str(e)}"
     
     return jsonify({
-        "mensagem": "Parabans, o servidor esta funcionando!",
+        "mensagem": "Parabens, o servidor esta funcionando!",
         "db_status": db_status
     })
