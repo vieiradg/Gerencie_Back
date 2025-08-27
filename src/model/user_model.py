@@ -4,7 +4,7 @@ from sqlalchemy.types import String, Integer
 
 
 class userModel(db.Model):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
 
     # campos obrigatorios de cadfastro
     id = Column(Integer, primary_key=True, autoincrement=True)
