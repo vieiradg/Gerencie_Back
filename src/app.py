@@ -3,8 +3,9 @@ from flask_cors import CORS  # Permite requisições de outros domínios (CORS)
 from dotenv import load_dotenv
 from src.rota_teste import bp_teste #apenas para desenvolvimento
 from config import Config
-from src.controller.user import bp_user
 from src.model import db
+from src.controller.user import bp_user
+from src.controller.tenants import bp_tenant
 
 import os
 
@@ -19,6 +20,7 @@ def create_app():
     CORS(app, origins="*")
 
     app.register_blueprint(bp_user)
+    app.register_blueprint(bp_tenant)
     app.register_blueprint(bp_teste)
 
     with app.app_context():
