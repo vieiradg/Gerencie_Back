@@ -12,9 +12,15 @@ def create_token (dados):
     token = jwt.encode(dados, JWT_SECRET, algorithm=JWT_ALGORITHM)
     return token
 
-def verify_token(token):
+def verify_token(token_header):
+    if not token_header or not token_header.startswith("Bearer "):
+        return jsonify({"erro": "Token não fornecido"}), 401
+    
+    token = token_header.split(" ")[1]
+
     try:
-        return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return payload
     except jwt.ExpiredSignatureError:
         return jsonify({"erro": "Token expirado!"}), 401
     except jwt.InvalidTokenError:
