@@ -6,6 +6,8 @@ from config import Config
 from src.model import db
 from src.controller.user import bp_user
 from src.controller.tenants import bp_tenant
+from src.controller.property import bp_property
+
 
 import os
 
@@ -21,6 +23,7 @@ def create_app():
 
     app.register_blueprint(bp_user)
     app.register_blueprint(bp_tenant)
+    app.register_blueprint(bp_property)
     app.register_blueprint(bp_teste)
 
     with app.app_context():
