@@ -13,7 +13,8 @@ def register():
      
      user_exists = db.session.execute(db.select(userModel).where(or_(
           userModel.email == data["email"],
-          userModel.cpf == data["cpf"]))).scalar()
+          userModel.cpf == data["cpf"]
+     ))).scalar()
           
      if user_exists:
       if user_exists.email == data["email"]:
