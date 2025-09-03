@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from flask import jsonify
+from datetime import datetime, timedelta
 import jwt
 
 load_dotenv()
@@ -7,9 +8,12 @@ import os
 
 JWT_SECRET = os.getenv("JWT_SECRET")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM")
+JWT_EXPIRATION_HOURS = int(os.getenv("JWT_EXPIRATION_HOURS", 12))
 
-def create_token (dados):
-    token = jwt.encode(dados, JWT_SECRET, algorithm=JWT_ALGORITHM)
+def create_token(dados):
+    expiracao = datetime.utcnow() + timedelta(minutes=JWT_EXPIRATION_HOURS)
+    payload = {**dados, "exp": expiracao}
+    token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
     return token
 
 def verify_token(token_header):
