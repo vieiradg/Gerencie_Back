@@ -12,6 +12,7 @@ class propertyModel(db.Model):
     house_number = Column(String(10), nullable=False)
     house_complement = Column(String(50), nullable=True)
     city = Column(String(50), nullable=False)
+    house_neighborhood = Column(String(50), nullable=False)
     postal_code = Column(String(10), nullable=False)
     
     
@@ -22,5 +23,6 @@ class propertyModel(db.Model):
             "house_number": self.house_number,
             "house_complement": self.house_complement,
             "city": self.city,
+            "house_neighborhood": self.house_neighborhood,
             "postal_code": self.postal_code
             }
