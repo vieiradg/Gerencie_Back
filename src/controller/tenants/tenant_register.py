@@ -1,25 +1,26 @@
-from flask import request, jsonify  # Importa módulos do Flask
+from flask import request, jsonify
 from sqlalchemy import or_
-from src.security.jwt_config import verify_token
-from . import bp_tenant
-
+from flasgger.utils import swag_from
 from src.model.tenant_model import tenantModel
 from src.model import db
+from src.security.jwt_config import token_required
+from . import bp_tenant
 
 @bp_tenant.route("/register", methods=["POST"])
-def register():
+@token_required
+@swag_from("../../docs/tenant_register.yml")
+def register(user_data):
      data = request.get_json()
-     token_header = request.headers.get("Authorization")
-     print(token_header)
+     user_id = user_data["id"]
 
-     payload = verify_token(token_header)
-     if isinstance(payload, tuple):
-          return payload
-     user_id = payload["id"]
-     
-     tenant_exists = db.session.execute(db.select(tenantModel).where(or_(
-          tenantModel.phone_number == data["phone_number"],
-          tenantModel.cpf == data["cpf"]))).scalar()
+     tenant_exists = db.session.execute(
+          db.select(tenantModel).where(
+               or_(
+                    tenantModel.phone_number == data["phone_number"],
+                    tenantModel.cpf == data["cpf"]
+               )
+          )
+     ).scalar()
           
      if tenant_exists:
       if tenant_exists.phone_number == data["phone_number"]:
@@ -40,4 +41,4 @@ def register():
           return jsonify({ "message": "Inquilino cadastrado com sucesso", "tenant": tenant.to_dict() }), 201
      except Exception as e:
           db.session.rollback()
-          return jsonify({"message": "Erro ao cadastrar Inquilino", "erro": str(e)}), 500
+          return jsonify({"message": "Erro ao cadastrar Inquilino", "error": str(e)}), 500
