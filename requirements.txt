@@ -6,3 +6,4 @@ SQLAlchemy
 dotenv
 Flask-Bcrypt
 PyJWT
+flasgger
