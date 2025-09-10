@@ -1,0 +1,93 @@
+tags:
+  - Inquilino
+description: Endpoint para registrar um novo inquilino. Requer token de autenticação.
+
+security:
+  - bearerAuth: []
+
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - name
+        - phone_number
+        - cpf
+      properties:
+        name:
+          type: string
+          example: "Maria Oliveira"
+        phone_number:
+          type: string
+          example: "11912345678"
+        cpf:
+          type: string
+          example: "98765432100"
+
+responses:
+  201:
+    description: Inquilino cadastrado com sucesso.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Inquilino cadastrado com sucesso"
+            tenant:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                name:
+                  type: string
+                  example: "Maria Oliveira"
+                phone_number:
+                  type: string
+                  example: "+55 11 91234-5678"
+                cpf:
+                  type: string
+                  example: "987.654.321-00"
+                user_id:
+                  type: integer
+                  example: 1
+
+  400:
+    description: Telefone ou CPF já cadastrado.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Telefone já cadastrado"
+
+  401:
+    description: Token inválido ou ausente.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Token inválido ou ausente"
+
+  500:
+    description: Erro interno inesperado.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Erro ao cadastrar Inquilino"
+            error:
+              type: string
+              example: "Detalhes do erro aqui"

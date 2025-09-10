@@ -1,0 +1,68 @@
+tags:
+  - Usuário
+description: Endpoint para login de um usuário.
+
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: usuario@email.com
+        password:
+          type: string
+          example: "123456"
+
+responses:
+  200:
+    description: Login realizado com sucesso.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Login bem-sucedido"
+            token:
+              type: string
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+  401:
+    description: Senha incorreta.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Senha incorreta"
+
+  404:
+    description: Usuário não encontrado.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Usuário não encontrado"
+
+  500:
+    description: Erro interno inesperado.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Erro ao fazer login: detalhes do erro aqui"

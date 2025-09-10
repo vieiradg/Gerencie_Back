@@ -1,0 +1,113 @@
+tags:
+  - Contratos
+description: Endpoint para registrar um novo contrato. Requer token de autenticação.
+
+security:
+  - bearerAuth: []
+
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - tenant_id
+        - property_id
+        - lease_period
+        - rent_value
+        - due_day
+        - start_date
+      properties:
+        tenant_id:
+          type: integer
+          example: 1
+        property_id:
+          type: integer
+          example: 2
+        lease_period:
+          type: integer
+          example: 12
+        rent_value:
+          type: number
+          example: 1500.00
+        due_day:
+          type: integer
+          example: 5
+        start_date:
+          type: string
+          format: date
+          example: "2025-09-10"
+
+responses:
+  201:
+    description: Contrato cadastrado com sucesso.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Contrato cadastrado com sucesso"
+            contract:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                tenant_id:
+                  type: integer
+                  example: 1
+                property_id:
+                  type: integer
+                  example: 2
+                lease_period:
+                  type: integer
+                  example: 12
+                rent_value:
+                  type: number
+                  example: 1500.00
+                due_day:
+                  type: integer
+                  example: 5
+                start_date:
+                  type: string
+                  format: date
+                  example: "2025-09-10"
+
+  400:
+    description: Contrato já existente.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Inquilino já possui contrato nesse imóvel"
+
+  401:
+    description: Token inválido ou ausente.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Token inválido ou ausente"
+
+  500:
+    description: Erro interno inesperado.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Erro interno ao cadastrar contrato"
+            error:
+              type: string
+              example: "Detalhes do erro aqui"

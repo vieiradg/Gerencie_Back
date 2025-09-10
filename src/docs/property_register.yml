@@ -1,0 +1,114 @@
+tags:
+  - Imoveis
+description: Endpoint para registrar um novo Imovel. Requer token de autenticação.
+
+security:
+  - bearerAuth: []
+
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - house_street
+        - house_number
+        - house_complement
+        - city
+        - house_neighborhood
+        - postal_code
+      properties:
+        house_street:
+          type: string
+          example: "Nome da rua"
+        house_number:
+          type: string
+          example: "Numero da residencia"
+        house_complement:
+          type: string
+          example: "Complemento da residencia caso tenha."
+        city:
+          type: string
+          example: "Nome da cidade"
+        house_neighborhood:
+          type: string
+          example: "Nome do bairro"
+        postal_code:
+          type: string
+          example: "Numero do CEP, somente os numeros"
+
+responses:
+  201:
+    description: Imóvel cadastrado com sucesso.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Imóvel cadastrado com sucesso"
+            property:
+              type: object
+              properties:
+                city:
+                  type: string
+                  example: Rio de Janeiro
+                house_complement:
+                  type: string
+                  example: "apt 2033"
+                house_neighborhood:
+                  type: string
+                  example: "vicente de carvalho"
+                house_number:
+                  type: string
+                  example: "232"
+                house_street:
+                  type: string
+                  example: "boulevard 28 de setembro"
+                id:
+                  type: integer
+                  example: "1"
+                postal_code:
+                  type: string
+                  example: "21245678"
+                user_id:
+                  type: interger
+                  example: "2"
+
+  400:
+    description: Propriedade já cadastrada.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Propriedade já cadastrada"
+
+  401:
+    description: Token inválido ou ausente.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Token inválido ou ausente"
+
+  500:
+    description: Erro interno inesperado.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Erro ao cadastrar Inquilino"
+            error:
+              type: string
+              example: "Detalhes do erro aqui"
