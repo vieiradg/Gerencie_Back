@@ -1,5 +1,6 @@
 from flask import request, jsonify  # Importa módulos do Flask
 from sqlalchemy import or_
+from flasgger.utils import swag_from
 from . import bp_user
 
 from src.model.user_model import userModel
@@ -8,6 +9,7 @@ from src.security.bcrypt_config import hash_password, check_password
 from src.security.jwt_config import create_token
 
 @bp_user.route("/register", methods=["POST"])
+@swag_from("../../docs/user_register.yml")
 def register():
      data = request.get_json()
      
@@ -36,4 +38,4 @@ def register():
           return jsonify({"message": "Usuário cadastrado com sucesso", "id": user.id}), 201
      except Exception as e:
           db.session.rollback()
-          return jsonify({"message": "Erro ao cadastrar usuário", "erro": str(e)}), 500
+          return jsonify({"message": "Erro ao cadastrar usuário", "error": str(e)}), 500
