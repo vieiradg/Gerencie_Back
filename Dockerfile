@@ -18,5 +18,6 @@ EXPOSE 5000
 
 # Comando para iniciar a app
 # O docker-compose.yml irá sobrescrever este comando, mas é bom tê-lo aqui
-CMD ["flask", "--app", "app", "run", "--host=0.0.0.0", "--debug"]
+CMD ["flask", "--app", "run", "run", "--host=0.0.0.0", "--debug"]
+
 

@@ -1,0 +1,68 @@
+tags:
+  - Usuário
+description: Endpoint para registrar um novo usuário.
+
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - name
+        - email
+        - cpf
+        - password
+      properties:
+        name:
+          type: string
+          example: "Nome completo"
+        email:
+          type: string
+          example: "usuario@email.com"
+        cpf:
+          type: string
+          example: "CPF somente os digitos"
+        password:
+          type: string
+          example: "senha de até 6 caracteres"
+
+responses:
+  201:
+    description: Usuário cadastrado com sucesso.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Usuário cadastrado com sucesso"
+            id:
+              type: integer
+              example: 1
+
+  400:
+    description: Email ou CPF já cadastrado.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Email já cadastrado"
+
+  500:
+    description: Erro interno inesperado.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Erro ao cadastrar usuário"
+            error:
+              type: string
+              example: "Detalhes do erro aqui"

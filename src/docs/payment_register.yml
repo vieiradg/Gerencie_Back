@@ -1,0 +1,104 @@
+tags:
+  - Payments
+description: Endpoint para registrar um novo pagamento de contrato. Requer token de autenticação.
+
+security:
+  - bearerAuth: []
+
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      type: object
+      required:
+        - contract_id
+        - payment_date
+        - amount_paid
+      properties:
+        contract_id:
+          type: integer
+          example: 1
+          description: ID do contrato relacionado ao pagamento
+        payment_date:
+          type: string
+          format: date
+          example: "2025-09-10"
+          description: Data do pagamento (YYYY-MM-DD)
+        amount_paid:
+          type: number
+          format: float
+          example: 1200.50
+          description: Valor pago
+          
+responses:
+  201:
+    description: Pagamento registrado com sucesso.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Pagamento registrado com sucesso"
+            payment:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  example: 1
+                contract_id:
+                  type: integer
+                  example: 1
+                payment_date:
+                  type: string
+                  example: "2025-09-10"
+                amount_paid:
+                  type: number
+                  example: 1200.50
+                installment_number:
+                  type: integer
+                  example: 1
+                total_installments:
+                  type: integer
+                  example: 12
+                status:
+                  type: string
+                  example: "paid"
+
+  400:
+    description: Erro de validação (parcela inválida ou pagamento duplicado).
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Pagamento da parcela 1 já registrado"
+
+  404:
+    description: Contrato não encontrado.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Contrato não encontrado"
+
+  500:
+    description: Erro interno do servidor.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Erro ao registrar pagamento"
+            error:
+              type: string
+              example: "Detalhes do erro aqui"
