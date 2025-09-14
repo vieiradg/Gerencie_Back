@@ -1,4 +1,4 @@
-from flask import request, jsonify  # Importa módulos do Flask
+from flask import request, jsonify
 from flasgger.utils import swag_from
 from . import bp_user
 
@@ -20,12 +20,19 @@ def login():
         if not user:
             return jsonify({"message": "Usuário não encontrado"}), 404
         
-        
         if check_password(data["password"], user.password):
             token = create_token({"id": user.id})
-            return jsonify({"message": "Login bem-sucedido", "token": token}), 200
+            
+            user_data = {
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+                "cpf": user.cpf
+            }
+            
+            return jsonify({"message": "Login bem-sucedido", "token": token, "user": user_data}), 200
         else:
-            return jsonify({"message": "Senha incorreta"}),401
+            return jsonify({"message": "Senha incorreta"}), 401
         
     except Exception as e:
         return jsonify({"message": "Erro ao fazer login", "error": str(e)}), 500

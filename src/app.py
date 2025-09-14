@@ -1,9 +1,9 @@
-from flask import Flask  # Framework web principal
+from flask import Flask
 from flasgger import Swagger
-from flask_cors import CORS  # Permite requisições de outros domínios (CORS)
+from flask_cors import CORS
 from dotenv import load_dotenv
-from src.rota_teste import bp_teste #apenas para desenvolvimento
-from config import Config
+from src.rota_teste import bp_teste
+from .config import Config
 from src.model import db
 from src.controller.user import bp_user
 from src.controller.tenants import bp_tenant
@@ -34,18 +34,13 @@ Swagger_config = {
     }
 }
 
-
-import os
-
-load_dotenv()  
-
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
     db.init_app(app)
-    Swagger(app, config=Swagger_config)
 
+    Swagger(app, config=Swagger_config)
     CORS(app, origins="*")
 
     app.register_blueprint(bp_user)
