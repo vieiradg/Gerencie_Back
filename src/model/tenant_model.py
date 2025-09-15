@@ -9,12 +9,12 @@ class tenantModel(db.Model):
     name = Column(String(100), nullable=False)
     cpf = Column(String(11), nullable=False, unique=True)
     phone_number = Column(String(11), nullable=False, unique=True)
+    status = Column(Integer, nullable=False, default=0)
 
     def to_dict(self) -> dict:
         return {
             "id": self.id,
             "name": self.name,
-            "cpf": self.cpf,
-            "phone_number": self.phone_number,
-            "user_id": self.user_id
+            "user_id": self.user_id,
+            "status": self.status
         }
