@@ -28,11 +28,9 @@ def register(user_data):
 
      property = propertyModel(
           user_id = user_id,
-          house_street=data["house_street"],
+          house_name = data["house_name"],
           house_number=data["house_number"],
-          house_complement=data["house_complement"],
-          city=data["city"],
-          house_neighborhood=data["house_neighborhood"],
+          house_complement=data["house_complement"], 
           postal_code=data["postal_code"]    
      )
 
