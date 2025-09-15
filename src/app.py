@@ -10,6 +10,7 @@ from src.controller.tenants import bp_tenant
 from src.controller.property import bp_property
 from src.controller.contracts import bp_contract
 from src.controller.payments import bp_payment
+from src.controller.dashboard import bp_dashboard
 
 Swagger_config = {
     "headers": [],
@@ -51,9 +52,13 @@ def create_app():
     app.register_blueprint(bp_user)
     app.register_blueprint(bp_tenant)
     app.register_blueprint(bp_property)
-    app.register_blueprint(bp_teste)
     app.register_blueprint(bp_contract)
     app.register_blueprint(bp_payment)
+    app.register_blueprint(bp_dashboard)
+
+
+
+    app.register_blueprint(bp_teste)
 
     with app.app_context():
         db.create_all()
