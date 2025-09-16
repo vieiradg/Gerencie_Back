@@ -30,12 +30,8 @@ def tenants_panel(user_data):
             tenants_list.append(tenant_dict)
 
         return jsonify({"tenants": tenants_list})
-
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
 
