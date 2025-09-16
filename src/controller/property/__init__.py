@@ -3,4 +3,4 @@ from flask import Blueprint
 bp_property = Blueprint("property", __name__, url_prefix="/property")
 
 # Importa os módulos que registram rotas
-from . import property_register
+from . import properties_register

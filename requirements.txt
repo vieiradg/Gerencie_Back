@@ -7,3 +7,4 @@ dotenv
 Flask-Bcrypt
 PyJWT
 flasgger
+python-dateutil
