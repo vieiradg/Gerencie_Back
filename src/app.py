@@ -45,8 +45,8 @@ def create_app():
     app.config.from_object(Config)
 
     db.init_app(app)
-    Swagger(app, config=Swagger_config)
 
+    Swagger(app, config=Swagger_config)
     CORS(app, origins="*")
 
     app.register_blueprint(bp_user)
@@ -55,8 +55,6 @@ def create_app():
     app.register_blueprint(bp_contract)
     app.register_blueprint(bp_payment)
     app.register_blueprint(bp_dashboard)
-
-
 
     app.register_blueprint(bp_teste)
 
