@@ -14,7 +14,9 @@ class tenantModel(db.Model):
     def to_dict(self) -> dict:
         return {
             "id": self.id,
-            "name": self.name,
             "user_id": self.user_id,
+            "name": self.name,
+            "cpf": self.cpf,
+            "phone_number": self.phone_number,
             "status": self.status
         }

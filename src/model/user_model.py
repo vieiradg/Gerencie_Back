@@ -22,5 +22,11 @@ class userModel(db.Model):
     def to_dict(self) -> dict:
         return {
             "id": self.id,
-            "name": self.name
+            "name": self.name,
+            "email": self.email,
+            "rg": self.rg,
+            "cpf": self.cpf,
+            "street": self.street,
+            "street_number": self.street_number,
+            "postal_code": self.postal_code
             }
