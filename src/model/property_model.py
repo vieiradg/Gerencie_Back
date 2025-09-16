@@ -5,7 +5,6 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 class propertyModel(db.Model):
     __tablename__ = 'properties'
 
-    # campos obrigatorios de cadfastro
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     house_name = Column(String(25), nullable=True )
