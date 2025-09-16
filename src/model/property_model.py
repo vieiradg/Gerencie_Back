@@ -9,7 +9,6 @@ class propertyModel(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     house_name = Column(String(25), nullable=True )
-
     postal_code = Column(String(10), nullable=False)
     house_number = Column(String(10), nullable=False)
     house_complement = Column(String(50), nullable=True)
@@ -17,9 +16,10 @@ class propertyModel(db.Model):
 
     def to_dict(self) -> dict:
         return {
-            "id": self.id, "user_id": self.user_id,
+            "id": self.id,
+            "user_id": self.user_id,
+            "house_name": self.house_name,
+            "postal_code": self.postal_code,
             "house_number": self.house_number,
             "house_complement": self.house_complement,
-            "postal_code": self.postal_code,
-            "house_name": self.house_name
             }
