@@ -3,7 +3,7 @@ from sqlalchemy.schema import Column
 from sqlalchemy import Column, Integer, String, ForeignKey
 
 class propertyModel(db.Model):
-    __tablename__ = 'propertys'
+    __tablename__ = 'properties'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
@@ -13,6 +13,7 @@ class propertyModel(db.Model):
     city = Column(String(50), nullable=False)
     house_neighborhood = Column(String(50), nullable=False)
     postal_code = Column(String(10), nullable=False)
+    house_name = Column(String(50), nullable=True)
     
     
     def to_dict(self) -> dict:
@@ -23,5 +24,6 @@ class propertyModel(db.Model):
             "house_complement": self.house_complement,
             "city": self.city,
             "house_neighborhood": self.house_neighborhood,
-            "postal_code": self.postal_code
+            "postal_code": self.postal_code,
+            "house_name": self.house_name
             }

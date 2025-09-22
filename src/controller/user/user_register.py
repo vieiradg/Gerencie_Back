@@ -15,21 +15,19 @@ def register():
      
      user_exists = db.session.execute(db.select(userModel).where(or_(
           userModel.email == data["email"],
-          userModel.cpf == data["cpf"]
+          # userModel.cpf == data["cpf"]
      ))).scalar()
           
      if user_exists:
       if user_exists.email == data["email"]:
         return jsonify({"message": "Email já cadastrado"}), 400
-      if user_exists.cpf == data["cpf"]:
-        return jsonify({"message": "CPF já cadastrado"}), 400
+      
           
      hashed = hash_password(data["password"])
      user = userModel(
           name=data["name"],
           email=data["email"],
-          password=hashed,
-          cpf=data["cpf"]
+          password=hashed
      )
 
      try:
