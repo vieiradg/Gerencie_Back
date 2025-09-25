@@ -11,10 +11,10 @@ class userModel(db.Model):
     name = Column(String(100), nullable=False)
     email = Column(String(100), nullable=False, unique=True)
     password = Column(String(100), nullable=False)
+    cpf = Column(String(11), nullable=False, unique=True)
 
     # campos posteriores de cadastro
     rg = Column(String(20), nullable=True, unique=True)
-    cpf = Column(String(11), nullable=True, unique=True)
     street = Column(String(100), nullable=True)
     street_number = Column(String(10), nullable=True)
     postal_code = Column(String(10), nullable=True)
