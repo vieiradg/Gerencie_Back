@@ -6,7 +6,7 @@ class propertyModel(db.Model):
     __tablename__ = 'properties'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     house_street = Column(String(100), nullable=False)
     house_number = Column(String(10), nullable=False)
     house_complement = Column(String(50), nullable=True)
