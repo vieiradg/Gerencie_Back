@@ -1,10 +1,11 @@
 from src.model import db
 from sqlalchemy.schema import Column
 from sqlalchemy.types import String, Integer
+from sqlalchemy.orm import relationship
 
 
 class userModel(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     # campos obrigatorios de cadfastro
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -19,6 +20,26 @@ class userModel(db.Model):
     street_number = Column(String(10), nullable=True)
     postal_code = Column(String(10), nullable=True)
 
+    # RELACIONAMENTOS COM CASCADE
+    properties = relationship(
+        "propertyModel",
+        backref="user",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+    tenants = relationship(
+        "tenantModel",
+        backref="user",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+    contracts = relationship(
+        "contractModel",
+        backref="user",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+
     def to_dict(self) -> dict:
         return {
             "id": self.id,
@@ -28,5 +49,5 @@ class userModel(db.Model):
             "cpf": self.cpf,
             "street": self.street,
             "street_number": self.street_number,
-            "postal_code": self.postal_code
-            }
+            "postal_code": self.postal_code,
+        }

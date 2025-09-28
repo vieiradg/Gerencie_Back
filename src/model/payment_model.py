@@ -5,7 +5,7 @@ class paymentModel(db.Model):
     __tablename__ = 'payments'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    contract_id = Column(Integer, ForeignKey("contracts.id"), nullable=False)  
+    contract_id = Column(Integer, ForeignKey("contracts.id", ondelete="CASCADE"), nullable=False) 
     payment_date = Column(Date, nullable=True)
     installment_number = Column(Integer, nullable=False)  
     amount_paid = Column(Float, nullable=True)  
