@@ -72,8 +72,19 @@ def register(user_data):
 
         # Monta o JSON de retorno
 
-        return jsonify({
-            "message": "Contrato cadastrado com sucesso e parcelas geradas"}), 201
+        return (
+            jsonify(
+                {
+                    "message": "Contrato cadastrado com sucesso e parcelas geradas",
+                    "contract": {
+                        "id": contract.id,
+                        "tenant_id": contract.tenant_id,
+                        "property_id": contract.property_id,
+                    },
+                }
+            ),
+            201,
+        )
 
     except Exception as e:
         db.session.rollback()
