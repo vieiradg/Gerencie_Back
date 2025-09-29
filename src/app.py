@@ -2,9 +2,9 @@ from flask import Flask
 from flasgger import Swagger
 from flask_cors import CORS
 from dotenv import load_dotenv
-from src.rota_teste import bp_teste
 from .config import Config
 from src.model import db
+
 from src.controller.user import bp_user
 from src.controller.tenants import bp_tenant
 from src.controller.property import bp_property
@@ -50,8 +50,6 @@ def create_app():
     app.register_blueprint(bp_contract)
     app.register_blueprint(bp_payment)
     app.register_blueprint(bp_dashboard)
-
-    app.register_blueprint(bp_teste)
 
     with app.app_context():
         db.create_all()

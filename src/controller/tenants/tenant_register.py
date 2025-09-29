@@ -29,7 +29,6 @@ def register(user_data):
         if not cleaned_data.get(field):
             return jsonify({"message": "Todos os campos são obrigatórios."}), 400
 
-    # 1. VERIFICAÇÃO DE DUPLICIDADE DE CPF/TELEFONE (Já estava ok)
     tenant_exists = tenantModel.query.filter(
         or_(
             tenantModel.phone_number == cleaned_data["phone_number"], 
@@ -43,19 +42,16 @@ def register(user_data):
         if tenant_exists.cpf == cleaned_data["cpf"]:
             return jsonify({"message": "Inquilino já cadastrado."}), 400 
     
-    # 2. NOVA VERIFICAÇÃO: DUPLICIDADE DE IMÓVEL (property_id)
     property_id = data.get("property_id")
     if property_id:
         property_occupied = tenantModel.query.filter_by(property_id=property_id).first()
         if property_occupied:
-            # Busca o nome do imóvel para uma mensagem de erro mais clara
             property_details = propertyModel.query.filter_by(id=property_id).first()
             prop_name = property_details.house_name if property_details and property_details.house_name else "o imóvel selecionado"
             return jsonify({
                 "message": f"O imóvel '{prop_name}' já está ocupado por outro inquilino."
             }), 400
 
-    # 3. CADASTRO DO INQUILINO
     tenant = tenantModel(
         name=cleaned_data["name"],
         user_id=user_id,
@@ -115,7 +111,6 @@ def update_tenant(user_data, tenant_id):
     user_id = user_data["id"]
     cleaned_data = clean_data(data)
 
-    # Verifica se o inquilino que está sendo editado pertence ao usuário
     tenant_to_update = tenantModel.query.filter_by(
         id=tenant_id, user_id=user_id
     ).first()
@@ -123,10 +118,9 @@ def update_tenant(user_data, tenant_id):
     if not tenant_to_update:
         return jsonify({"message": "Inquilino não encontrado ou não autorizado"}), 404
         
-    # LÓGICA DE VERIFICAÇÃO DE DUPLICIDADE (IGNORANDO O PRÓPRIO INQUILINO)
     tenant_exists = tenantModel.query.filter(
-        tenantModel.id != tenant_id, # Ignora o ID que está sendo editado
-        tenantModel.user_id == user_id, # Garante que a busca seja apenas para o usuário atual
+        tenantModel.id != tenant_id, 
+        tenantModel.user_id == user_id, 
         or_(
             tenantModel.phone_number == cleaned_data.get("phone_number"), 
             tenantModel.cpf == cleaned_data.get("cpf"),
