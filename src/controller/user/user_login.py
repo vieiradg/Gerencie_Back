@@ -16,25 +16,30 @@ def login():
             return jsonify({"message": "Todos os campos são obrigatórios."}), 400
 
     try:
-        user_exists = userModel.query.filter(userModel.email == data["email"]).first()
+        user_exists = userModel.query.filter_by(email=data["email"]).first()
 
         if not user_exists:
             return jsonify({"message": "Usuário ou senha inválidos."}), 401
 
-        if check_password(data["password"], user_exists.password):
-            token = create_token({"id": user_exists.id})
-
-            return (
-                jsonify(
-                    {
-                        "message": "Login realizado com sucesso.",
-                        "token": token,
-                    }
-                ),
-                200,
-            )
-        else:
+        if not check_password(data["password"], user_exists.password):
             return jsonify({"message": "Usuário ou senha inválidos."}), 401
 
+        token_data = {"id": user_exists.id} 
+        token = create_token(token_data)
+
+        user_data = {"id": user_exists.id, "email": user_exists.email, "name": user_exists.name}
+
+        return (
+            jsonify(
+                {
+                    "message": "Login realizado com sucesso.",
+                    "token": token,
+                    "user": user_data, 
+                }
+            ),
+            200,
+        )
+
     except Exception as e:
-        return jsonify({"message": "Erro ao fazer login", "error": str(e)}), 500
+        print(f"ERRO DE LOGIN CRÍTICO: {e}")
+        return jsonify({"message": "Erro interno ao processar login", "error": str(e)}), 500

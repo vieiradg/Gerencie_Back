@@ -15,10 +15,8 @@ def register(user_data):
     user_id = user_data["id"]
 
     for field in [
-        "house_name",
         "house_street",
         "house_number",
-        "house_complement",
         "city",
         "house_neighborhood",
         "postal_code",
@@ -26,25 +24,21 @@ def register(user_data):
         if not data.get(field):
             return jsonify({"message": "Todos os campos são obrigatórios."}), 400
 
-    property_exists = db.session.execute(
-        db.select(propertyModel).where(
-            and_(
-                propertyModel.postal_code == data["postal_code"],
-                propertyModel.house_complement == data["house_complement"],
-                propertyModel.house_number == data["house_number"],
-            )
-        )
-    ).scalar()
+    property_exists = propertyModel.query.filter_by(
+        postal_code=data["postal_code"],
+        house_complement=data.get("house_complement"),
+        house_number=data["house_number"],
+    ).first()
 
     if property_exists:
         return jsonify({"message": "Propriedade já cadastrada"}), 400
 
     property = propertyModel(
         user_id=user_id,
-        house_name=data["house_name"],
+        house_name=data.get("house_name", ""),
         house_street=data["house_street"],
         house_number=data["house_number"],
-        house_complement=data["house_complement"],
+        house_complement=data.get("house_complement", ""),
         city=data["city"],
         house_neighborhood=data["house_neighborhood"],
         postal_code=data["postal_code"],
@@ -119,6 +113,9 @@ def update_property(user_data, property_id):
         if not property_to_update:
             return jsonify({"message": "Imóvel não encontrado ou não autorizado"}), 404
 
+        property_to_update.house_name = data.get(
+            "house_name", property_to_update.house_name
+        )
         property_to_update.house_street = data.get(
             "house_street", property_to_update.house_street
         )
