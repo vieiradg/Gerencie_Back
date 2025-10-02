@@ -21,7 +21,6 @@ def token_required(f):
     def decorated(*args, **kwargs):
         token_header = request.headers.get("Authorization")
 
-        # Aqui usamos a sua lógica
         if not token_header or not token_header.startswith("Bearer "):
             return jsonify({"error": "Token não fornecido"}), 401
 
@@ -34,7 +33,6 @@ def token_required(f):
         except jwt.InvalidTokenError:
             return jsonify({"error": "Token inválido!"}), 401
 
-        # Passa os dados do token para a rota
         return f(payload, *args, **kwargs)
 
     return decorated
