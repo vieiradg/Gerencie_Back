@@ -30,23 +30,28 @@ def control_panel(user_data):
             .where(contractModel.user_id == user_data["id"])
         ).all()
         
-        # Inicializa métricas
-        active_tenants = set()   # uso set() para evitar duplicados
+        active_tenants = set()
         pending_rents = 0
         total_receive_month = 0.0
 
         for contract, tenant, property_, payment in results:
-            # Conta inquilinos ativos
             if tenant.status == 0:
                 active_tenants.add(tenant.id)
 
-            # Conta (ou melhor: soma) aluguéis pendentes (data vencida ou hoje e status = pending)
-            if payment and payment.status == "pending" and payment.payment_date <= today:
-                pending_rents += contract.rent_value   # soma o valor em dinheiro
-
-            # Soma total recebido no mês atual
+            # Correção de Tipagem: Usa due_date para atraso e verifica se existe
+            if (
+                payment and 
+                payment.status == "pending" and 
+                payment.due_date and 
+                payment.due_date <= today
+            ):
+                pending_rents += contract.rent_value
+            
+            # Correção de Tipagem: Verifica se a data de pagamento existe antes de acessar month/year
             if payment and payment.status == "paid":
-                if payment.payment_date and payment.payment_date.month == today.month and payment.payment_date.year == today.year:
+                if payment.payment_date and \
+                   payment.payment_date.month == today.month and \
+                   payment.payment_date.year == today.year:
                     total_receive_month += payment.amount_paid or 0
 
         response = {
@@ -59,4 +64,5 @@ def control_panel(user_data):
     
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": str(e)}), 500
+        print(f"Erro no Dashboard: {e}") 
+        return jsonify({"error": "Erro interno ao carregar o painel de controle."}), 500

@@ -2,8 +2,9 @@ from flask import Flask
 from flasgger import Swagger
 from flask_cors import CORS
 from dotenv import load_dotenv
-from .config import Config
+from src.config import Config
 from src.model import db
+from flask_migrate import Migrate  # 🌟 Adição necessária
 
 from src.controller.user import bp_user
 from src.controller.tenants import bp_tenant
@@ -40,6 +41,9 @@ def create_app():
     app.config.from_object(Config)
 
     db.init_app(app)
+    
+    # 🌟 Inicializa o Flask-Migrate
+    migrate = Migrate(app, db)
 
     Swagger(app, config=Swagger_config)
     CORS(app, origins="*")

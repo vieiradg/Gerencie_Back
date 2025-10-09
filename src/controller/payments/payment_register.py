@@ -43,7 +43,7 @@ def register_payment(user_data):
         installment_number = diff_months + 1 
 
         if payment_date_obj < start_date:
-             return jsonify({"message": "Data de pagamento anterior à data de início do contrato."}), 400
+            return jsonify({"message": "Data de pagamento anterior à data de início do contrato."}), 400
 
         if installment_number > lease_period:
             return jsonify({"message": f"Parcela {installment_number} excede a duração do contrato ({lease_period} parcelas)."}), 400
@@ -61,14 +61,20 @@ def register_payment(user_data):
             return jsonify({"message": f"Pagamento da parcela {installment_number} já registrado."}), 400
 
         status = "paid" if amount_paid >= contract.rent_value else "partial"
-
+        
+        # Como este é um registro de pagamento manual, estamos inserindo a transação diretamente.
+        # Devido à complexidade do seu ciclo de vida, o ideal é que ele atualize a parcela pendente.
+        # Mantive a estrutura original, removendo apenas o campo inexistente total_installments.
+        
         payment = paymentModel(
             contract_id=data["contract_id"],
             payment_date=payment_date_obj,
             amount_paid=amount_paid,
             installment_number=installment_number,
-            total_installments=lease_period,
-            status=status
+            status=status,
+            # Se for um novo registro, due_date deve ser fornecido ou calculado.
+            # Aqui, assumimos que esta rota está apenas registrando a transação.
+            due_date=payment_date_obj
         )
 
         db.session.add(payment)
@@ -111,22 +117,32 @@ def list_payments(user_data):
         for payment, contract, house_name, house_number in payments_query:
             payment_dict = payment.to_dict()
             
-            effective_status = payment_dict['status']
-            if effective_status == 'pending' and payment.payment_date < current_date:
+            due_date = payment.due_date 
+            effective_status = payment_dict.get('status', 'pending')
+            
+            # Lógica de Atraso
+            if effective_status == 'pending' and due_date and due_date < current_date:
                 effective_status = 'overdue'
 
-            property_display_name = f"{house_name}, {house_number}" if house_name else 'Imóvel N/A'
+            # 🎯 CORREÇÃO DO NOME DO IMÓVEL: Usa apenas house_name se ele existir
+            if house_name and house_name.strip():
+                property_display_name = house_name
+            else:
+                # Fallback, mas o house_name deve ser o nome completo (Rua, Número)
+                property_display_name = f"{house_name}, {house_number}" if house_name else 'Imóvel N/A'
             
+            # Monta o dicionário de retorno
             payment_dict['contract_id'] = contract.id
-            payment_dict['amount'] = contract.rent_value 
-            payment_dict['property_name'] = property_display_name
-            payment_dict['status'] = effective_status
+            payment_dict['amount'] = contract.rent_value
+            payment_dict['property_name'] = property_display_name # Nome agora está limpo
+            payment_dict['status'] = effective_status 
             
             payments_list.append(payment_dict)
 
-        return jsonify({"payments": payments_list}), 200
+        return jsonify({"payments": payments_list, "message": "Pagamentos carregados com sucesso."}), 200
 
     except Exception as e:
+        db.session.rollback()
         print(f"ERRO CRÍTICO AO LISTAR PAGAMENTOS: {e}")
         return jsonify({"error": "Erro interno ao carregar pagamentos", "details": str(e)}), 500
 

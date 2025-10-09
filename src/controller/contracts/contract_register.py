@@ -68,23 +68,40 @@ def register(user_data):
         db.session.add(contract)
         db.session.commit()
         
+        # 1. DETERMINA O MÊS DE INÍCIO DA COBRANÇA
+        vencimento_base = start_date_obj 
+        
+        # Se o contrato começou APÓS o dia de vencimento (ex: começou dia 15, mas o vencimento é dia 10), 
+        # a primeira cobrança só pode ser no mês seguinte.
+        if contract.due_day < start_date_obj.day:
+            vencimento_base = vencimento_base + relativedelta(months=1)
+
+        # 2. GERAÇÃO DAS PARCELAS
         for i in range(contract.lease_period):
-            vencimento_base = start_date_obj + relativedelta(months=i)
+            
+            target_month = vencimento_base.month
+            target_year = vencimento_base.year
             
             try:
-                vencimento = datetime(vencimento_base.year, vencimento_base.month, contract.due_day)
+                # Calcula a data de vencimento completa
+                data_vencimento_completa = datetime(target_year, target_month, contract.due_day)
             except ValueError:
-                vencimento = datetime(vencimento_base.year, vencimento_base.month + 1, 1) - timedelta(days=1)
+                # Se o dia for inválido para o mês (ex: 31 de Fevereiro), usa o último dia do mês
+                data_vencimento_completa = datetime(target_year, target_month + 1, 1) - timedelta(days=1)
 
             parcela = paymentModel(
                 contract_id=contract.id,
+                due_date=data_vencimento_completa.date(), 
                 installment_number=i+1,
                 amount_paid=None,
                 status="pending",
-                payment_date=vencimento.date()
+                payment_date=None
             )
             db.session.add(parcela)
 
+            # AVANÇA A BASE PARA O PRÓXIMO MÊS
+            vencimento_base = vencimento_base + relativedelta(months=1)
+        
         db.session.commit()
         
         return (

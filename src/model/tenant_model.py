@@ -1,6 +1,7 @@
 from src.model import db
-from sqlalchemy import Column, Integer, String, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey, UniqueConstraint, DateTime
 from sqlalchemy.orm import relationship
+from datetime import datetime
 
 class tenantModel(db.Model):
     __tablename__ = 'tenants'
@@ -11,16 +12,22 @@ class tenantModel(db.Model):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    name = Column(String(100), nullable=False)
-    cpf = Column(String(11), nullable=False)
-    phone_number = Column(String(11), nullable=False)
-    status = Column(Integer, nullable=False, default=0)
     
-    # CORREÇÃO 1: Referenciando a tabela correta "properties" (no plural)
+    name = Column(String(120), nullable=False)
+    phone_number = Column(String(20), nullable=False) 
+    cpf = Column(String(14), nullable=False)
+    
+    # CAMPOS DE PERFIL E CONTATO
+    email = Column(String(120), nullable=True)
+    nationality = Column(String(50), nullable=True)
+    marital_status = Column(String(50), nullable=True)
+    profession = Column(String(100), nullable=True)
+    
     property_id = Column(Integer, ForeignKey("properties.id", ondelete="SET NULL"), nullable=True)
+    
+    status = Column(Integer, nullable=False, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
-    # CORREÇÃO 2: Relacionamento definido corretamente usando a tabela "properties" (no plural)
-    # Assumindo que a classe do imóvel é 'propertyModel'
     property = relationship("propertyModel", backref="tenants")
 
     contracts = relationship(
@@ -34,6 +41,10 @@ class tenantModel(db.Model):
             "name": self.name,
             "cpf": self.cpf,
             "phone_number": self.phone_number,
+            "email": self.email,
+            "nationality": self.nationality,
+            "marital_status": self.marital_status,
+            "profession": self.profession,
             "status": self.status,
             "property_id": self.property_id
         }
